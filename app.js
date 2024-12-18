@@ -2,26 +2,29 @@ const todoForm = document.querySelector('form');
 const todoInput = document.getElementById('todoInput');
 const todoListUl = document.getElementById('todo-list');
 
-let allTodos = [];
+let allTodos = getTodos();
+updateTodoList();
+console.log(allTodos);
+
 
 todoForm.addEventListener('submit', function(e) {
     e.preventDefault();
     addToDo();
 })
 
-const addToDo = () => {
+function addToDo() {
     const todoText = todoInput.value.trim();
     
     if(todoText.length > 0) {
         allTodos.push(todoText);
         updateTodoList();
+        saveTodos();
         todoInput.value = "";
     }
 
-
 }   
 
-const updateTodoList = () => {
+function updateTodoList() {
     todoListUl.innerHTML = "";
     
     allTodos.forEach((todo, todoIndex) => {
@@ -48,3 +51,14 @@ const createTodoItem = (todo, todoIndex) => {
     return TodoLi;
 }
 
+const saveTodos = () => {
+    const todosJson = JSON.stringify(allTodos);
+    localStorage.setItem("todos", todosJson)
+}
+
+saveTodos();
+
+function getTodos(){
+    const todos = localStorage.getItem("todos") || "[]";
+    return JSON.parse(todos); 
+}
